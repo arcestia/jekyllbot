@@ -26,7 +26,7 @@ post '/webhook' do
 
   FileUtils.rm_rf dir
 
-  push = JSON.parse(params[:payload])
+  push = JSON.parse(request.body.read)
   if push["commits"].first["author"]["name"] == name
     puts "This is just the callback from JekyllBot's last commit... aborting."
     return
