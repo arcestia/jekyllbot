@@ -49,26 +49,30 @@ post '/webhook' do
   site = Jekyll::Site.new(options)
 
   puts "starting to build in " + dir
-  begin
-    site.process
-  rescue Jekyll::FatalException => e
-    puts e.message
-    FileUtils.rm_rf dir
-    exit(1)
-  end
 
-  puts "succesfully built; commiting..."
-  begin
-    g.config('user.name', name)
-    g.config('user.email', email)
-    puts g.commit_all( "[JekyllBot] Building JSON files")
-  rescue Git::GitExecuteError => e
-    puts e.message
-  else
-    puts "pushing"
-    puts g.push
-    puts "pushed"
-  end
+    stream do |out|
+        out << "starting to build in " + dir + "\n"
+        begin
+            site.process
+        rescue Jekyll::Errors::FatalException => e
+            puts e.message
+            FileUtils.rm_rf dir
+            exit(1)
+        end
+
+        puts "succesfully built; commiting..."
+        begin
+            g.config('user.name', name)
+            g.config('user.email', email)
+            puts g.commit_all( "[JekyllBot] Building JSON files")
+        rescue Git::GitExecuteError => e
+            puts e.message
+        else
+            puts "pushing"
+            puts g.push
+            puts "pushed"
+        end
+        out << "Done building\n"
 
   puts "cleaning up."
   FileUtils.rm_rf dir
