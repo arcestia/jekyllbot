@@ -73,36 +73,33 @@ post '/webhook' do
   site = Jekyll::Site.new(options)
     before = Dir.entries(dir)
     puts 'Dir: ' + before.join('<br />\n')
-STDOUT.flush
-    stream do |out|
-        out << "starting to build in " + dir + "\n"
-        begin
-            if File.directory?(dir)
-                puts 'Dir ' + dir + ' exists'
-            else
-                puts 'Dir ' + dir + 'DOES NOT exist'
-            end
-            STDOUT.flush
-            site.process
-        rescue Jekyll::Errors::FatalException => e
-            FileUtils.rm_rf dir
-            exit(1)
-        end
-
-        puts "succesfully built; commiting..."
-        begin
-            g.config('user.name', name)
-            g.config('user.email', email)
-            puts g.commit_all( "[JekyllBot] Building JSON files")
-        rescue Git::GitExecuteError => e
-            puts e.message
+    STDOUT.flush
+    begin
+        if File.directory?(dir)
+            puts 'Dir ' + dir + ' exists'
         else
-            puts "pushing"
-            puts g.push
-            puts "pushed"
+            puts 'Dir ' + dir + ' DOES NOT exist'
         end
-        out << "Done building\n"
+        STDOUT.flush
+        site.process
+    rescue Jekyll::Errors::FatalException => e
+        FileUtils.rm_rf dir
+        exit(1)
     end
+
+    puts "succesfully built; commiting..."
+    begin
+        g.config('user.name', name)
+        g.config('user.email', email)
+        puts g.commit_all( "[JekyllBot] Building JSON files")
+    rescue Git::GitExecuteError => e
+        puts e.message
+    else
+        puts "pushing"
+        puts g.push
+        puts "pushed"
+    end
+
   puts "cleaning up."
   FileUtils.rm_rf dir
 
