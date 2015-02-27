@@ -70,12 +70,13 @@ post '/webhook' do
   options["plugins"] = File.join( dir, '_plugins')
   options = Jekyll.configuration(options)
   site = Jekyll::Site.new(options)
-
     stream do |out|
         out << "starting to build in " + dir + "\n"
         begin
             site.process
         rescue Jekyll::Errors::FatalException => e
+            before = Dir.entries(dir)
+            puts before.join('<br />\n')
             puts e.message
             FileUtils.rm_rf dir
             exit(1)
