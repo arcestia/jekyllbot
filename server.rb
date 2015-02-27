@@ -47,7 +47,6 @@ post '/webhook' do
   password = ENV['GH_PASS'] || ''
 
   FileUtils.rm_rf dir
-  FileUtils.mkdir_p File.join( dir, '_site')
 
   push = JSON.parse(request.body.read)
   if push["commits"].first["author"]["name"] == name
@@ -60,6 +59,8 @@ post '/webhook' do
 
   puts "cloning " + url + " into " + dir
   g = Git.clone(url, dir)
+
+  FileUtils.mkdir_p File.join( dir, '_site')
 
   options = {}
   options["server"] = false
