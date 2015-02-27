@@ -78,9 +78,9 @@ STDOUT.flush
         out << "starting to build in " + dir + "\n"
         begin
             if File.directory?(dir)
-                puts 'Dir exists'
+                puts 'Dir ' + dir + ' exists'
             else
-                puts 'Dir DOES NOT exist'
+                puts 'Dir ' + dir + 'DOES NOT exist'
             end
             STDOUT.flush
             site.process
