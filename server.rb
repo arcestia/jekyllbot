@@ -2,6 +2,7 @@ require 'sinatra'
 require 'json'
 require 'git'
 require 'jekyll'
+require yaml
 
 get '/' do
   dir = './tmp/jekyll'
@@ -9,13 +10,23 @@ get '/' do
 
   before = Dir.entries(dir)
 
+  options = {}
+  options["server"] = false
+  options["auto"] = false
+  options["safe"] = false
+  options["source"] = dir
+  options["destination"] = File.join( dir, '_site')
+  options["plugins"] = File.join( dir, '_plugins')
+  options = Jekyll.configuration(options)
+
   g = Git.clone('https://micurley:m0j0j0j0@github.com/micurley/micurley.github.io.git', dir)
 
   after = Dir.entries(dir)
 
   FileUtils.rm_rf dir
+    opts = y options
 
-  '<pre>Listening: \n\tBefore:\n' + before.join('\t\t') + '\n\n\tAfter\n' + after.join('\t') + '</pre>'
+  'Listening: <br />Before:<br />' + before.join('<br />') + '<br />After\n' + after.join('<br />') +  opts
 end
 
 post '/' do
