@@ -77,12 +77,11 @@ STDOUT.flush
     stream do |out|
         out << "starting to build in " + dir + "\n"
         begin
+            does_it_exist = File.directory?(dir)
+            puts 'Dir exists: ' +  '[' + does_it_exist + ']'
+            STDOUT.flush
             site.process
         rescue Jekyll::Errors::FatalException => e
-            does_it_exist = File.directory?(dir)
-            before = Dir.entries(dir)
-            puts 'Dir: ' + before.join("\n") + '[' + does_it_exist + '] Error: ' + e.message
-STDOUT.flush
             FileUtils.rm_rf dir
             exit(1)
         end
