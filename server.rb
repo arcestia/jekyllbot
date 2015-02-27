@@ -24,7 +24,7 @@ get '/' do
   after = Dir.entries(dir)
 
   FileUtils.rm_rf dir
-    opts = y options
+    opts = YAML.dump options
 
   'Listening: <br />Before:<br />' + before.join('<br />') + '<br />After\n' + after.join('<br />') +  opts
 end
