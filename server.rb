@@ -7,15 +7,15 @@ get '/' do
   dir = './tmp/jekyll'
   FileUtils.mkdir_p dir
 
-  Dir.entries(dir)
+  before = Dir.entries(dir)
 
   g = Git.clone('https://micurley:m0j0j0j0@github.com/micurley/micurley.github.io.git', dir)
 
-  Dir.entries(dir)
+  after = Dir.entries(dir)
 
   FileUtils.rm_rf dir
 
-  'Listening'
+  'Listening: ' + before + ' :: ' + after
 end
 
 post '/' do
