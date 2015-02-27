@@ -40,7 +40,7 @@ post '/webhook' do
   url = push["repository"]["url"] + ".git"
   url["https://"] = "https://" + username + ":" + password + "@"
 
-  puts "cloning into " + url
+  puts "cloning " + url + " into " + dir
   g = Git.clone(url, dir)
 
   options = {}
@@ -52,8 +52,6 @@ post '/webhook' do
   options["plugins"] = File.join( dir, '_plugins')
   options = Jekyll.configuration(options)
   site = Jekyll::Site.new(options)
-
-  puts "starting to build in " + dir
 
     stream do |out|
         out << "starting to build in " + dir + "\n"
