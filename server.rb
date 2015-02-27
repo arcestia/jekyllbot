@@ -15,7 +15,7 @@ get '/' do
 
   FileUtils.rm_rf dir
 
-  'Listening: ' + before + ' :: ' + after
+  '<pre>Listening: \n\tBefore:\n' + before.join('\t\t') + '\n\n\tAfter\n' + after.join('\t') + '</pre>'
 end
 
 post '/' do
