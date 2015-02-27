@@ -77,8 +77,11 @@ STDOUT.flush
     stream do |out|
         out << "starting to build in " + dir + "\n"
         begin
-            does_it_exist = File.directory?(dir)
-            puts 'Dir exists: ' +  '[' + does_it_exist + ']'
+            if File.directory?(dir)
+                puts 'Dir exists'
+            else
+                puts 'Dir DOES NOT exist'
+            end
             STDOUT.flush
             site.process
         rescue Jekyll::Errors::FatalException => e
