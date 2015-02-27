@@ -70,6 +70,9 @@ post '/webhook' do
   options["plugins"] = File.join( dir, '_plugins')
   options = Jekyll.configuration(options)
   site = Jekyll::Site.new(options)
+    before = Dir.entries(dir)
+    puts 'Dir: ' + before.join('<br />\n')
+
     stream do |out|
         out << "starting to build in " + dir + "\n"
         begin
