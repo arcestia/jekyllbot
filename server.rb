@@ -2,7 +2,7 @@ require 'sinatra'
 require 'json'
 require 'git'
 require 'jekyll'
-require yaml
+require 'yaml'
 
 get '/' do
   dir = './tmp/jekyll'
