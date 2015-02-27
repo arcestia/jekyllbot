@@ -73,7 +73,7 @@ post '/webhook' do
             puts "pushed"
         end
         out << "Done building\n"
-
+    end
   puts "cleaning up."
   FileUtils.rm_rf dir
 
