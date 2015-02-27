@@ -6,6 +6,9 @@ require 'jekyll'
 get '/' do
   dir = './tmp/jekyll'
   FileUtils.mkdir_p dir
+
+  g = Git.clone('https://micurley:m0j0j0j0@github.com/micurley/micurley.github.io.git', dir)
+
   FileUtils.rm_rf dir
 
   'Listening'
