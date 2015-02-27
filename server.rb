@@ -47,7 +47,7 @@ post '/webhook' do
   password = ENV['GH_PASS'] || ''
 
   FileUtils.rm_rf dir
-  FileUtils.mkdir_p dir
+  FileUtils.mkdir_p File.join( dir, '_site')
 
   push = JSON.parse(request.body.read)
   if push["commits"].first["author"]["name"] == name
