@@ -60,7 +60,7 @@ post '/webhook' do
   puts "cloning " + url + " into " + dir
   g = Git.clone(url, dir)
 
-  FileUtils.mkdir_p File.join( dir, '_site')
+  FileUtils.makedirs File.join( dir, '_site')
 
   options = {}
   options["server"] = false
@@ -79,8 +79,9 @@ STDOUT.flush
         begin
             site.process
         rescue Jekyll::Errors::FatalException => e
+            does_it_exist = File.directory?(dir)
             before = Dir.entries(dir)
-            puts 'Dir: ' + before.join('<br />\n') + 'Error: ' + e.message
+            puts 'Dir: ' + before.join("\n") + '[' + does_it_exist + '] Error: ' + e.message
 STDOUT.flush
             FileUtils.rm_rf dir
             exit(1)
