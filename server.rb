@@ -4,6 +4,10 @@ require 'git'
 require 'jekyll'
 
 get '/' do
+  dir = './tmp/jekyll'
+  FileUtils.mkdir_p dir
+  FileUtils.rm_rf dir
+
   'Listening'
 end
 
@@ -25,6 +29,7 @@ post '/webhook' do
   password = ENV['GH_PASS'] || ''
 
   FileUtils.rm_rf dir
+  FileUtils.mkdir_p dir
 
   push = JSON.parse(request.body.read)
   if push["commits"].first["author"]["name"] == name
