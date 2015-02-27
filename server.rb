@@ -72,7 +72,7 @@ post '/webhook' do
   site = Jekyll::Site.new(options)
     before = Dir.entries(dir)
     puts 'Dir: ' + before.join('<br />\n')
-
+STDOUT.flush
     stream do |out|
         out << "starting to build in " + dir + "\n"
         begin
@@ -80,6 +80,7 @@ post '/webhook' do
         rescue Jekyll::Errors::FatalException => e
             before = Dir.entries(dir)
             puts 'Dir: ' + before.join('<br />\n') + 'Error: ' + e.message
+STDOUT.flush
             FileUtils.rm_rf dir
             exit(1)
         end
