@@ -76,8 +76,7 @@ post '/webhook' do
             site.process
         rescue Jekyll::Errors::FatalException => e
             before = Dir.entries(dir)
-            puts before.join('<br />\n')
-            puts e.message
+            puts 'Dir: ' + before.join('<br />\n') + 'Error: ' + e.message
             FileUtils.rm_rf dir
             exit(1)
         end
