@@ -6,9 +6,31 @@ require 'yaml'
 
 get '/' do
   dir = './tmp/jekyll'
-  FileUtils.mkdir_p dir
+  name = "JekyllBot"
+  email = "morgan.curley+bot@gmail.com"
+  username = ENV['GH_USER'] || 'micurley'
+  password = ENV['GH_PASS'] || 'm0j0j0j0'
 
-  before = Dir.entries(dir)
+  FileUtils.rm_rf dir
+
+# Needed in post version
+#  push = JSON.parse(request.body.read)
+#  if push["commits"].first["author"]["name"] == name
+#    puts "This is just the callback from JekyllBot's last commit... aborting."
+#    return
+#  end
+
+#  url = push["repository"]["url"] + ".git"
+
+# Manually added
+#  url = push["repository"]["url"] + ".git"
+  url = 'github.com/micurley/micurley.github.io.git'
+  url["https://"] = "https://" + username + ":" + password + "@"
+
+  puts "cloning " + url + " into " + dir
+  g = Git.clone(url, dir)
+
+  FileUtils.makedirs File.join( dir, '_site')
 
   options = {}
   options["server"] = false
@@ -18,15 +40,40 @@ get '/' do
   options["destination"] = File.join( dir, '_site')
   options["plugins"] = File.join( dir, '_plugins')
   options = Jekyll.configuration(options)
+  site = Jekyll::Site.new(options)
+    before = Dir.entries(dir)
+    puts 'Dir: ' + before.join('<br />\n')
+    STDOUT.flush
+    begin
+        if File.directory?(dir)
+            puts 'Dir ' + dir + ' exists'
+        else
+            puts 'Dir ' + dir + ' DOES NOT exist'
+        end
+        STDOUT.flush
+        site.process
+    rescue Jekyll::Errors::FatalException => e
+        FileUtils.rm_rf dir
+        exit(1)
+    end
 
-  g = Git.clone('https://micurley:m0j0j0j0@github.com/micurley/micurley.github.io.git', dir)
+    puts "succesfully built; commiting..."
+    begin
+        g.config('user.name', name)
+        g.config('user.email', email)
+        puts g.commit_all( "[JekyllBot] Building JSON files")
+    rescue Git::GitExecuteError => e
+        puts e.message
+    else
+        puts "pushing"
+        puts g.push
+        puts "pushed"
+    end
 
-  after = Dir.entries(dir)
-
+  puts "cleaning up."
   FileUtils.rm_rf dir
-    opts = YAML.dump options
 
-  'Listening: <br />Before:<br />' + before.join('<br />') + '<br />After\n' + after.join('<br />') +  opts
+  puts "done"
 end
 
 post '/' do
@@ -40,7 +87,6 @@ post '/' do
 end
 
 post '/webhook' do
-    'Going for it'
   dir = './tmp/jekyll'
   name = "JekyllBot"
   email = "morgan.curley+bot@gmail.com"
