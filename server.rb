@@ -22,10 +22,12 @@ get '/' do
 
 #  url = push["repository"]["url"] + ".git"
 
-# Manually added
 #  url = push["repository"]["url"] + ".git"
-  url = 'github.com/micurley/micurley.github.io.git'
-  url["https://"] = "https://" + username + ":" + password + "@"
+#  url["https://"] = "https://" + username + ":" + password + "@"
+
+
+# Manually added
+  url = 'https://' + username + ":" + password + '@github.com/micurley/micurley.github.io' + '.git'
 
   puts "cloning " + url + " into " + dir
   g = Git.clone(url, dir)
