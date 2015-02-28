@@ -40,6 +40,7 @@ post '/' do
 end
 
 post '/webhook' do
+    'Going for it'
   dir = './tmp/jekyll'
   name = "JekyllBot"
   email = "morgan.curley+bot@gmail.com"
