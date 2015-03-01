@@ -17,10 +17,8 @@ get '/' do
 
         url = 'https://' + username + ":" + password + '@github.com/micurley/micurley.github.io' + '.git'
 
-        out.write "cloning " + url + " into " + dir
+        out.puts "cloning " + url + " into " + dir
         g = Git.clone(url, dir)
-
-        FileUtils.makedirs File.join( dir, '_site')
 
         options = {}
         options["server"] = false
@@ -33,8 +31,8 @@ get '/' do
         site = Jekyll::Site.new(options)
 
         begin
-            out.write "Starting site process\n"
-            site.process
+            out.puts "Starting site process"
+            out.puts site.process
         rescue Jekyll::Errors::FatalException => e
             FileUtils.rm_rf dir
             exit(1)
@@ -45,7 +43,8 @@ get '/' do
         begin
             g.config('user.name', name)
             g.config('user.email', email)
-            out.puts  g.commit_all( "[JekyllBot] Building JSON files")
+            out.puts  g.status
+            out.puts  g.commit_all("[JekyllBot] Building JSON files")
         rescue Git::GitExecuteError => e
             out.puts  e.message
         else
@@ -55,7 +54,7 @@ get '/' do
         end
 
         out.puts  "cleaning up."
-        FileUtils.rm_rf dir
+#        FileUtils.rm_rf dir
 
         out.puts  "done"
         out.flush
