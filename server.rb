@@ -44,6 +44,7 @@ get '/' do
             g.config('user.name', name)
             g.config('user.email', email)
             out.puts  g.status
+            g.add(:all=>true)
             out.puts  g.commit_all("[JekyllBot] Building JSON files")
         rescue Git::GitExecuteError => e
             out.puts  e.message
@@ -54,7 +55,7 @@ get '/' do
         end
 
         out.puts  "cleaning up."
-#        FileUtils.rm_rf dir
+        FileUtils.rm_rf dir
 
         out.puts  "done"
         out.flush
@@ -101,16 +102,8 @@ post '/webhook' do
   options["plugins"] = File.join( dir, '_plugins')
   options = Jekyll.configuration(options)
   site = Jekyll::Site.new(options)
-    before = Dir.entries(dir)
-    puts 'Dir: ' + before.join('<br />\n')
     STDOUT.flush
     begin
-        if File.directory?(dir)
-            puts 'Dir ' + dir + ' exists'
-        else
-            puts 'Dir ' + dir + ' DOES NOT exist'
-        end
-        STDOUT.flush
         site.process
     rescue Jekyll::Errors::FatalException => e
         FileUtils.rm_rf dir
