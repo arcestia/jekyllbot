@@ -9,13 +9,13 @@ get '/' do
     stream do |out|
         dir = './tmp/jekyll'
         name = "JekyllBot"
-        email = "morgan.curley+bot@gmail.com"
-        username = ENV['GH_USER'] || 'micurley'
-        password = ENV['GH_PASS'] || 'm0j0j0j0'
+        email = "arcestia@vivaldi.net"
+        username = ENV['GH_USER'] || 'arcestiabot'
+        password = ENV['GH_PASS'] || '1lovececil'
 
         FileUtils.rm_rf dir
 
-        url = 'https://' + username + ":" + password + '@github.com/micurley/micurley.github.io' + '.git'
+        url = 'https://' + username + ":" + password + '@github.com/arcestia/arcestia.github.io' + '.git'
 
         out.puts "cloning " + url + " into " + dir
         g = Git.clone(url, dir)
